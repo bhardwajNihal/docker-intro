@@ -7,7 +7,8 @@
 # CORE CONCEPTS
 - --------------------------------------------------
 
-- ✅ IMAGE: A blueprint (like a recipe) of your application/environment.
+- ✅ IMAGE: A Docker image is a lightweight, standalone, executable package that includes everything needed to run a piece of software, including the code, a runtime, libraries, environment variables, and config files.
+
 - ✅ CONTAINER: A running instance of an image.
 - ✅ DOCKERFILE: A text file with instructions to build your image.
 - ✅ VOLUME: A way to persist data on the host machine.
@@ -57,12 +58,65 @@ docker logs mycontainer
 - -------------------------
 - FROM node:18  ----or node:22-alpine --> a lightweight version for the node
 - WORKDIR /app
-- COPY package*.json ./
+- COPY . .
+- RUN npm install
+- EXPOSE 3000
+- CMD ["npm", "start"]
+- -------------------------
+
+# passing environment varialble
+- docker run -p 3000:3000 -e DATABASE_URL="postgres://secret123
+- the "-e" flag lets us pass env
+
+------------------------------------
+# Layers in docker
+- Each instruction in your Dockerfile creates a new layer in the final image.
+- These layers are stacked and cached.
+- If nothing changes in a layer, Docker reuses the cached layer to make builds faster.
+- Change in any layer = all layers below it are rebuilt.
+- So it's important to order Dockerfile smartly to benefit from caching
+
+# utilizing layers to create a much optimized docker file
+
+- FROM node:22-alpine 
+- WORKDIR /app
+- COPY ./package.json ./package.json
+- COPY ./package-lock.json ./package-lock.json
 - RUN npm install
 - COPY . .
 - EXPOSE 3000
 - CMD ["npm", "start"]
-- -------------------------
+
+-- This way, any changes to only the source code, doesn't reinstall all dependencies all again
+
+--------------------------------
+# Running Mongodb container locally
+- docker run -d -p 27017:27017 --name my_mongoDb_container mongo
+  --> will check for any prexisting image
+  ---> If not found, will pull one from the docker registry
+  ---> confirm image once pulled, and running 
+  ---> run it with the above command
+  --> we have now mongodb container running
+  --> go to mongodb atlas connect to this container by the url - mongodb://localhost:27017
+
+  - kill the container by docker kill container id
+  - delete the container otherwise will give name conflict when ran again 
+    - command --> docker rm container_name
+  - run it again, works fine, no conflict
+
+
+---------------------------------------
+# Volume
+
+- clearly saw earlies with the mongo container
+- when we kill the container and run it again
+- see that the data is gone from the atlas
+- to persist the data across kill and re-runs
+  - volumes are used to persist container data even if the container is kill and re-run
+  - command to create volume:
+    >> docker volume create volume_name
+  - command to run container connecting to volume
+    >> docker run -p 27017:27017 -v volume_name:/data/db mongo
 
 - --------------------------------------------------
 # DOCKER COMPOSE (Managing Multiple Containers)
