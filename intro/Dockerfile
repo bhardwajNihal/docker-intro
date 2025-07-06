@@ -1,4 +1,7 @@
 # -----------------------------------------------
+
+# Basic dockerfile, to dockerize an exress backend.
+
 # Use Node base image. Alpine = minimal, lightweight (~5MB)
 FROM node:22-alpine
 

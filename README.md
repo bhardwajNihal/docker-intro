@@ -3,6 +3,11 @@
 - Docker is a tool that lets you package your application (code + dependencies + environment)
 - into a "container" that can run anywhere — on any system that has Docker installed.
 
+# benefits a docker
+  - makes the app run on any system, with minimal setup, just require docker installed locally.
+  >> just clone the repo >> docker run.
+  - no manual setup.
+
 - --------------------------------------------------
 # CORE CONCEPTS
 - --------------------------------------------------
@@ -23,7 +28,7 @@
 docker build -t myapp .
 
 - Run a container from an image
-docker run -d -p 3000:3000 --name mycontainer myapp
+docker run -d -p 3000:3000 --name <container_name> <created_image_name>
 
 - List running containers
 docker ps
@@ -108,7 +113,7 @@ docker logs mycontainer
 ---------------------------------------
 # Volume
 
-- clearly saw earlies with the mongo container
+- clearly saw earlier with the mongo container
 - when we kill the container and run it again
 - see that the data is gone from the atlas
 - to persist the data across kill and re-runs
@@ -117,6 +122,8 @@ docker logs mycontainer
     >> docker volume create volume_name
   - command to run container connecting to volume
     >> docker run -p 27017:27017 -v volume_name:/data/db mongo
+  - list existing volumes
+    >> docker volume ls
 
 - --------------------------------------------------
 # DOCKER COMPOSE (Managing Multiple Containers)
